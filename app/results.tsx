@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   Building2,
-  Stethoscope,
   Landmark,
   Download,
   Copy,
@@ -57,7 +56,7 @@ export default function Results({
       <div className="results-heading">
         <div>
           <p className="eyebrow">
-            {run.sample ? "EXPLORE A SAVED EXAMPLE" : "YOUR RESEARCH"}
+            {run.sample ? "Reviewed example" : "Research results"}
           </p>
           <h2>
             {routeLabels[run.input.route]}{" "}
@@ -152,12 +151,6 @@ export default function Results({
       )}
       <div className="opportunity-list">
         {run.results.map((item, i) => {
-          const Icon =
-            item.kind === "tender"
-              ? Landmark
-              : item.kind === "physician"
-                ? Stethoscope
-                : Building2;
           return (
             <button
               className="opportunity-row"
@@ -166,9 +159,6 @@ export default function Results({
             >
               <span className="result-index">
                 {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="result-icon">
-                <Icon size={22} />
               </span>
               <span className="result-main">
                 <span className="result-type">
@@ -225,7 +215,7 @@ export default function Results({
       >
         <SheetContent className="detail-sheet">
           <SheetHeader>
-            <p className="eyebrow">OPPORTUNITY BRIEF</p>
+            <p className="eyebrow">Opportunity brief</p>
             <SheetTitle className="detail-title">{selected?.name}</SheetTitle>
             <SheetDescription>
               {selected?.location} · {selected ? statusLabel(selected) : ""}
@@ -258,7 +248,7 @@ export default function Results({
                 ))}
               </section>
               <section className="fit-section">
-                <span className="eyebrow">COMMERCIAL HYPOTHESIS</span>
+                <span className="eyebrow">Commercial hypothesis</span>
                 <p>{selected.hypothesis}</p>
                 <div className="tag-row">
                   {selected.products.map((p) => (

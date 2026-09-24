@@ -8,12 +8,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
-  Files,
-  Compass,
   MapPin,
   Building2,
-  Stethoscope,
-  Landmark,
   Upload,
   Check,
   BookOpen,
@@ -493,12 +489,7 @@ export default function Workspace({
       <Toaster richColors position="bottom-right" />
       <header className="topbar">
         <a href="/" className="brand">
-          <span className="brand-mark">
-            f<span>10</span>
-          </span>
-          first ten
-          <span className="brand-divider" />
-          <span className="brand-sub">MEXICO</span>
+          First Ten<span className="brand-sub">Mexico</span>
         </a>
         <div className="top-actions">
           <button
@@ -543,25 +534,20 @@ export default function Workspace({
       <main className="main-content">
         <div className="page-heading">
           <div>
-            <p className="eyebrow">YOUR NEXT COMMERCIAL CONVERSATION</p>
-            <h1>Find your way in.</h1>
+            <h1>Research opportunities</h1>
             <p className="intro">
-              The right products. The right people. A reason you can verify.
+              A sales approach for your medical catalog, supported by sources.
             </p>
           </div>
-          <span className="market-tag">
-            <MapPin size={15} /> Medical distribution · Mexico
-          </span>
+
         </div>
         <div className="workspace-grid">
           <section className="intake panel">
             <div className="section-heading">
               <span className="step-number">01</span>
               <div>
-                <h2>Start with your catalog</h2>
-                <p>Tell us what you distribute.</p>
+                <h2>Your catalog</h2>
               </div>
-              <Files size={23} />
             </div>
             <label className="field-label" htmlFor="catalog">
               Products & intended use
@@ -685,7 +671,7 @@ export default function Workspace({
               }
               onClick={review}
             >
-              Review catalog & sales routes <ArrowRight size={17} />
+              Review catalog <ArrowRight size={17} />
             </Button>
             <p className="privacy-note">
               Your uploads and research stay private. Live research sends your
@@ -696,19 +682,17 @@ export default function Workspace({
             <div className="section-heading">
               <span className="step-number">02</span>
               <div>
-                <h2>Choose your route</h2>
-                <p>A good product match is only the beginning.</p>
+                <h2>Sales approach</h2>
               </div>
             </div>
             {families.length > 0 ? (
               <>
                 <div className="recommendation">
-                  <Compass size={22} />
                   <div>
                     <span className="eyebrow">
                       {families.length > 1
-                        ? "MIXED CATALOG · REVIEW EACH FAMILY"
-                        : "RECOMMENDED START"}
+                        ? "Recommendation by product family"
+                        : "Recommended approach"}
                     </span>
                     <h3>
                       {families.length > 1
@@ -813,12 +797,11 @@ export default function Workspace({
               </>
             ) : (
               <div className="recommendation muted">
-                <Compass size={24} />
                 <div>
-                  <h3>Let your catalog lead.</h3>
+                  <h3>Start with a catalog review</h3>
                   <p>
-                    Review your products to see a recommended approach,
-                    complementary route, and what needs checking.
+                    Add your products to get a recommended sales approach.
+                    You can choose either route below.
                   </p>
                 </div>
               </div>
@@ -847,7 +830,6 @@ export default function Workspace({
                 }
               >
                 <RadioGroupItem value="tenders" />
-                <Landmark size={24} />
                 <strong>Licitaciones</strong>
                 <span>
                   Public procurement, verified deadlines, and participation
@@ -860,11 +842,9 @@ export default function Workspace({
                 }
               >
                 <RadioGroupItem value="direct" />
-                <Stethoscope size={24} />
                 <strong>Contacto directo</strong>
                 <span>
-                  Relevant physicians, hospitals, and the right buying
-                  conversation.
+                  Physicians, hospitals, and their purchasing contacts.
                 </span>
               </label>
             </RadioGroup>
@@ -903,7 +883,7 @@ export default function Workspace({
                     {busy ? (
                       <LoaderCircle className="spin" size={17} />
                     ) : (
-                      <Compass size={17} />
+                      <ArrowRight size={17} />
                     )}
                     Research {routeLabels[route]}
                   </Button>
@@ -924,17 +904,10 @@ export default function Workspace({
                 {error}
               </div>
             )}
-            <div className="evidence-note">
-              <BookOpen size={20} />
-              <div>
-                <strong>Evidence before outreach.</strong>
-                <p>
-                  Every opportunity separates sourced facts, suggested fit, and
-                  unanswered questions. A clinical advocate is not automatically
-                  the buyer.
-                </p>
-              </div>
-            </div>
+            <p className="evidence-note">
+              Physician interest does not establish purchasing authority.
+              Product relevance does not establish tender eligibility.
+            </p>
           </section>
         </div>
         <div ref={resultsRef}>
@@ -951,12 +924,10 @@ export default function Workspace({
           ) : (
             <section className="examples-strip">
               <div>
-                <span className="eyebrow">SEE THE DIFFERENCE</span>
-                <h2>Two catalogs. Different ways in.</h2>
-                <p>Explore real sources without running a search.</p>
+                <h2>Reviewed examples</h2>
+                <p>Explore the results before running research.</p>
               </div>
               <button onClick={() => stageSample("monitoring")}>
-                <Landmark size={21} />
                 <span>
                   <strong>Patient monitoring</strong>
                   <small>Tenders + hospital purchasing</small>
@@ -964,7 +935,6 @@ export default function Workspace({
                 <ArrowUpRight size={19} />
               </button>
               <button onClick={() => stageSample("procedures")}>
-                <Stethoscope size={21} />
                 <span>
                   <strong>Procedure supplies</strong>
                   <small>Physicians + institutional context</small>
@@ -975,7 +945,7 @@ export default function Workspace({
           )}
         </div>
         <footer className="footer">
-          <span>First Ten / An independent working prototype</span>
+          <span>First Ten · Medical distribution in Mexico</span>
           <div>
             <button onClick={() => setDrawer("sources")}>
               Sources & method
