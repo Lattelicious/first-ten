@@ -969,7 +969,10 @@ export default function Workspace({
           if (!o) setDrawer(null);
         }}
       >
-        <SheetContent className="detail-sheet">
+        <SheetContent
+          className="detail-sheet"
+          {...(drawer === "sources" ? { "aria-describedby": undefined } : {})}
+        >
           <SheetHeader>
             <SheetTitle className="detail-title">
               {drawer === "saved"
@@ -978,13 +981,13 @@ export default function Workspace({
                   ? "Owner workspace"
                   : "Sources & method"}
             </SheetTitle>
-            <SheetDescription>
-              {drawer === "saved"
-                ? "Only you can access these catalogs and research runs."
-                : drawer === "admin"
-                  ? "Usage and official dataset imports."
-                  : "A shortlist is a starting point for qualification, not proof of buying intent."}
-            </SheetDescription>
+            {drawer !== "sources" && (
+              <SheetDescription>
+                {drawer === "saved"
+                  ? "Only you can access these catalogs and research runs."
+                  : "Usage and official dataset imports."}
+              </SheetDescription>
+            )}
           </SheetHeader>
           <div className="detail-body">
             {drawer === "sources" ? (
@@ -1167,11 +1170,6 @@ function Sources() {
         <li>Research primary sources for the selected market and route.</li>
         <li>Check supporting evidence before publishing a result.</li>
       </ol>
-      <p>
-        Recommendations are commercial heuristics. Supplier readiness is
-        self-reported. Neither establishes product compliance, tender
-        eligibility, or purchasing authority.
-      </p>
       <h3>Public procurement</h3>
       <p>
         <a
@@ -1227,7 +1225,7 @@ function Sources() {
         is an external reference only. Its profiles, reviews, ratings, and
         appointment data are not ingested.
       </p>
-      <h3>Data and spending</h3>
+      <h3>Data</h3>
       <p>
         Live research sends the selected catalog information to OpenAI. Your
         uploads and runs are restricted to your signed-in account. You can
@@ -1235,18 +1233,10 @@ function Sources() {
         be deleted after completed stages; provider retention policies also
         apply.
       </p>
-      <p>
-        The initial AI allowance is $25: $20 for visitors and $5 for owner
-        testing. One visitor run per UTC day; one active run. Requests reserve a
-        conservative allowance, with bounded search calls and output. These are
-        application estimates, not a provider-enforced billing guarantee.
-      </p>
       <h3>Examples</h3>
       <p>
-        The two examples were manually reviewed on 24 September 2026. Suppliers
-        and catalogs are fictional. Referenced organizations and professionals
-        are real; they have not endorsed First Ten. Historical procedures are
-        clearly labeled and are not open leads.
+        Suppliers and catalogs in provided examples are fictional, referenced
+        organizations and professionals are real.
       </p>
     </div>
   );
