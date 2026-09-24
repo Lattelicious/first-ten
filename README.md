@@ -4,6 +4,8 @@ A catalog-to-opportunity workspace for medical distributors in Mexico. First Ten
 
 **Status:** interactive showcase with reviewed examples, private catalog storage and automated coverage. The OpenAI connection is configured; live research is paused until the API account has credits. Both live research modes still require successful end-to-end evaluation before being presented as validated.
 
+[Open First Ten](https://first-ten.casagarciachavez.chatgpt.site) · [Evaluation record](docs/EVALUATION.md)
+
 ## The workflow
 
 1. Paste products or upload a CSV/text PDF (10 MB, up to 20 PDF pages).

@@ -26,6 +26,12 @@ Commands: `npm test`, `npm run typecheck`, `npm run build`.
 
 Checked signed-out examples, mixed-family review, primary-route overrides, physician evidence drawer, editable Spanish outreach and the copy-success state, a confirmed mode-specific CSV download, catalog-file upload, WebMCP staging/invalid-input rejection, local development sign-in and private-workspace view. Browser errors were absent during these checks. A 390-pixel mobile viewport had no horizontal overflow. This is targeted accessibility QA, not a full accessibility certification.
 
+## Hosted verification
+
+The public Sites deployment was verified on 24 September 2026. Signed-out visitors receive the workspace and reviewed example CSVs; private research returns HTTP 401. ChatGPT sign-in completed successfully, and a neutral CSV catalog was uploaded and shown in the authenticated saved workspace. The resulting account identifier was used to configure owner access; it was not guessed from an email or local test fixture. D1 migrations and private upload storage are working in production.
+
+The school-neutral public repository and GitHub profile link to the published showcase. One neutral `test-catalog.csv` remains in the owner’s private workspace from production verification.
+
 ## Measured costs and live gate
 
 **Reported token usage and measured research cost: $0.** A user-created project key was configured privately on 24 September 2026. OpenAI accepted authentication and confirmed access to the configured model. The first live procurement run returned `credit_balance_exhausted` with no usage. It stopped without recommendations after approximately 6.5 seconds. Further paid requests were paused. This is a live failure-path check, not a successful research evaluation; quality, successful latency and per-run cost remain unmeasured.
@@ -34,10 +40,10 @@ A regression test now verifies that confirmed quota rejection explains the billi
 
 Budget configuration: $20 visitors + $5 owner testing/demonstrations. Each run reserves $2 atomically. Usage estimates use the configured model's input/output rates and actual web-search call count; ambiguous outcomes retain a conservative charge. These estimates must be reconciled against provider billing after the first live runs. The hosted app must not claim these fixture tests as live results.
 
-## Required before the hosted showcase is complete
+## Still required before claiming live research validation
 
-1. Fund the API account. The project key has already been saved privately and configured as a hosted secret.
-2. Verify the hosted owner identity and enable research after funding. DENUE remains unconfigured, with a visible coverage limitation.
-3. Run one live procurement and one live direct-contact smoke test within the $5 owner allocation, recording costs and latency.
-4. Manually review returned claims and publish only supported results.
-5. Publish through Sites and verify the production ChatGPT sign-in boundary. Link the successful hosted deployment from the GitHub showcase.
+1. Fund the API account. The supplied project key is already saved privately and configured as a hosted secret.
+2. Enable research and run one procurement and one direct-contact evaluation within the $5 owner allocation, recording cost and latency. The $20 visitor allocation remains separate.
+3. Manually audit returned claims and record any exclusions or quality issues. A short or empty supported result set is acceptable.
+
+DENUE remains unconfigured. Its absence is a visible source-coverage limitation, not substituted with fabricated establishment records.
