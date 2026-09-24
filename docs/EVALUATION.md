@@ -65,6 +65,14 @@ The following public primary pages supported the displayed specialty/services, l
 
 Patient reviews, ratings, testimonials, appointment availability and claimed case counts were not used to infer buying intent or procedure volume. Contact facts can change after this audit.
 
+## Hosted live smoke test
+
+The published application completed an authenticated owner procurement run on 24 September 2026. The browser was deliberately reloaded during discovery. The same saved run recovered after its interrupted request lease expired, finished evidence review, displayed results and enabled CSV export. Elapsed time was 115 seconds including the reload/recovery interval; estimated cost was **$0.174945**.
+
+It returned two historical IMSS UMAE 25 notices and **zero active opportunities**. Both were labeled historical and excluded from the active count. The [official October 2024 summary](https://sidof.segob.gob.mx/notas/docFuente/5740209) confirms the identifiers, issuing unit, location, quantities and dated schedules. Procedure T-118 specifically covers central and intensive-care monitoring; T-117 is generic equipment with product fit left uncertain. Full specifications, award outcomes and amendments remain unchecked. The redundant DOF PDF link timed out during manual review, so the successful official HTML source supports this audit. Historical deadlines were not presented as current submission opportunities.
+
+The hosted ledger showed **$0.786068 total owner testing cost**, **$0 reserved**, and **$0 visitor spending**, including the local carryover. About **$4.21** remains for owner demonstrations, and **$20.00** remains for visitors. Values are application estimates as of this check.
+
 ## Allowance and limitations
 
 Budget configuration: $20 visitors + $5 owner testing/demonstrations. Each run reserves $2 atomically. Usage estimates use reported tokens, the configured model rates and actual web-search call count; they are not a provider invoice or provider-enforced cap. The $0.611123 local evaluation cost is carried into the hosted owner ledger once at initialization. The visitor allocation is untouched by these tests.
