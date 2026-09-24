@@ -1,0 +1,1 @@
+ALTER TABLE `runs` ADD `provider_polls` integer DEFAULT 0 NOT NULL;
