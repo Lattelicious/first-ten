@@ -1,4 +1,4 @@
-import { database, AppError, isOwner } from "./env";
+import { config, database, AppError, isOwner } from "./env";
 import type { ResearchRun, RunInput } from "../types";
 export type Row = {
   id: string;
@@ -49,13 +49,17 @@ export async function ownedRun(id: string, owner: string) {
   return row;
 }
 export async function initializeBudgets() {
+  // Carry prelaunch testing into the same $5 allowance exactly once.
+  const priorSpend = Number(config().OWNER_INITIAL_SPEND_MICROS ?? 0);
+  if (!Number.isSafeInteger(priorSpend) || priorSpend < 0 || priorSpend > 5_000_000)
+    throw new AppError("The owner testing allowance needs configuration review.", 503);
   await database().batch([
     database().prepare(
       "INSERT INTO budgets(pool,limit_micros) VALUES('visitors',20000000) ON CONFLICT(pool) DO NOTHING",
     ),
     database().prepare(
-      "INSERT INTO budgets(pool,limit_micros) VALUES('owner',5000000) ON CONFLICT(pool) DO NOTHING",
-    ),
+      "INSERT INTO budgets(pool,limit_micros,spent_micros) VALUES('owner',5000000,?) ON CONFLICT(pool) DO NOTHING",
+    ).bind(priorSpend),
   ]);
 }
 export async function createRun(owner: string, input: RunInput) {

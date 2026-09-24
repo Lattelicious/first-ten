@@ -1,4 +1,4 @@
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { researchJsonSchema } from "./output-schema";
 import { config, database, AppError } from "./env";
 import { researchOutput } from "./schemas";
 import {
@@ -13,6 +13,7 @@ import {
   sanitizeOpportunities,
   safeUrl,
   matchesPurchasingScope,
+  matchesDirectTerritory,
 } from "../validation";
 import type { RunInput } from "../types";
 export const MODEL = "gpt-5.4-mini-2026-03-17";
@@ -54,6 +55,7 @@ async function provider(path = "", method = "GET", body?: unknown) {
       "The research provider is unavailable (" +
         res.status +
         "). Please use the saved examples.",
+      method === "POST" && path === "" && [400, 401, 403, 404, 422, 429].includes(res.status),
     );
   }
   if (method === "DELETE") return {};
@@ -104,11 +106,7 @@ export function usageMicros(r: ProviderResponse) {
   );
 }
 async function launch(input: string, verify = false) {
-  const schema = zodToJsonSchema(researchOutput, {
-    $refStrategy: "none",
-    target: "openAi",
-  });
-  delete (schema as Record<string, unknown>).$schema;
+  const schema = researchJsonSchema();
   return (await provider("", "POST", {
     model: MODEL,
     instructions: SYSTEM,
@@ -308,7 +306,7 @@ function verificationPrompt(row: Row, input: RunInput, sources: string[]) {
     (row.raw_text ?? "").slice(0, 23000) +
     "\nPreviously consulted source URLs:\n" +
     JSON.stringify(sources) +
-    "\nReturn the provided JSON schema. All fields required; use null for missing nullable values. Evidence must state a narrow claim and actual consulted URL; use today for retrievedAt/checkedAt, original date or null for publishedAt. Dates must be ISO timestamps with explicit timezone when known; deadline is null when timezone or time is unclear. Tender status open requires a future verified submission deadline and checked amendments; otherwise unknown/closed/etc. Invitations are invitation_only, historical awards are historical=true. A checklist supported means documentary requirement evidence, NEVER supplier eligibility. Contact role is suggested unless a named person and authority are explicitly sourced. credentials must be unverified. Spanish outreach may mention only supported facts, proposed product relevance, and a request for the correct contact; no claims of established buying intent or prior relationships. Never include Doctoralia information. Every URL must be a real source consulted. List coverage limitations; fewer than ten is expected when evidence is insufficient."
+    "\nReturn the provided JSON schema. All fields required; use null for missing nullable values. Evidence must state a narrow claim and actual consulted URL; use today for retrievedAt/checkedAt, original date or null for publishedAt. Dates must be ISO timestamps with explicit timezone when known; deadline is null when timezone or time is unclear. Tender status open requires a future verified submission deadline and checked amendments; otherwise unknown/closed/etc. Invitations are invitation_only, historical awards are historical=true. A checklist supported means documentary requirement evidence, NEVER supplier eligibility. Contact role is suggested unless a named person and authority are explicitly sourced. credentials must be unverified. For direct contacts, location must name the verified city and state; exclude candidates outside the requested territory rather than widening the market. Distinguish historical training from current practice or affiliation. The outreach field MUST be an actual ready-to-copy message entirely in SPANISH, beginning Hola or Estimado/a, with [tu nombre] and [empresa] placeholders. Do not put English analysis or advice in outreach. It may mention only supported facts, proposed product relevance, and a request for the correct contact; no claims of established buying intent or prior relationships. Never include Doctoralia information. Every URL must be a real source consulted. List coverage limitations; fewer than ten is expected when evidence is insufficient."
   );
 }
 export async function advance(row: Row) {
@@ -423,7 +421,7 @@ export async function advance(row: Row) {
             : "institution";
       const results = sanitizeOpportunities(
         parsed.opportunities.filter(
-          (x) => x.kind === expected && matchesPurchasingScope(x, input),
+          (x) => x.kind === expected && matchesPurchasingScope(x, input) && matchesDirectTerritory(x, input),
         ),
         sources,
       );

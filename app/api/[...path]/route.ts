@@ -1,6 +1,6 @@
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { config, database, AppError, isOwner } from "@/lib/server/env";
-import { publicRun, ownedRun, createRun, type Row } from "@/lib/server/store";
+import { publicRun, ownedRun, createRun, initializeBudgets, type Row } from "@/lib/server/store";
 import { runInputSchema } from "@/lib/server/schemas";
 import {
   advance,
@@ -216,6 +216,7 @@ async function handle(
       if (!isOwner(owner))
         throw new AppError("This is an owner-only operation.", 403);
       if (req.method === "GET" && path[1] === "status") {
+        await initializeBudgets();
         return reply({
           budgets: (await db.prepare("SELECT * FROM budgets").all()).results,
           datasets: (

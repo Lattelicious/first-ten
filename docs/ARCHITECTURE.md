@@ -33,9 +33,9 @@ Deletion stops active work, requests provider cleanup for a retained response, d
 
 The browser advances a persisted run while the page is open. OpenAI background response IDs survive reloads. Reopening a saved run resumes polling; closing the tab can leave the run awaiting the next advance. This is intentionally not a continuous monitoring system.
 
-A conditional D1 lease prevents concurrent advances. Starting-request markers prevent automatic duplicate provider launches after an ambiguous network failure. Each run allows two stages, six tool calls per stage, 6,000 output tokens per stage, at most 160 polls, and a 30-minute polling deadline. Source/JSON failures publish no unverified partial list. Cancellation attempts to stop the provider and settles measured or conservatively reserved spending.
+A conditional D1 lease prevents concurrent advances. Starting-request markers prevent automatic duplicate provider launches after an ambiguous network failure. Each run allows two stages, six tool calls per stage, 6,000 output tokens per stage, at most 160 polls, and a 30-minute polling deadline. The strict-output schema replaces unsupported URI-format annotations with an HTTPS pattern; runtime validation still checks URLs. Source/JSON failures publish no unverified partial list. Cancellation attempts to stop the provider and settles measured or conservatively reserved spending.
 
-Source URLs must come from actual tool source metadata. Procurement evidence must be official government material. Open tenders additionally require a future timezone-qualified deadline and checked amendments. Duplicate entities are removed. Unsupported contact fields are cleared, credentials stay unverified, and scope filters exclude unrelated screen-monitor purchases and maintenance/rental mismatches. These checks supplement model review; they are not a proof that every claim is true.
+Source URLs must come from actual tool source metadata. Procurement evidence must be official government material. Open tenders additionally require a future timezone-qualified deadline and checked amendments. Duplicate entities are removed. Unsupported contact fields are cleared, credentials stay unverified, and scope filters exclude unrelated screen-monitor purchases and maintenance/rental mismatches. Source comparison removes tracking parameters while preserving identifying query parameters. Direct leads use conservative city/state text matching (including CDMX aliases), not geocoding; one city or state per run is recommended. A Spanish introduction fallback replaces outreach that is not a usable Spanish draft. These checks supplement model review; they are not a proof that every claim is true.
 
 ## Source connectors
 
@@ -46,7 +46,7 @@ Source URLs must come from actual tool source metadata. Procurement evidence mus
 
 ## Allowance
 
-One D1 transaction checks remaining pool capacity, checks the owner's active run/daily claim, inserts the run, reserves $2, and writes the visitor daily claim. Settlement atomically replaces the reservation with estimated usage once. Ambiguous provider outcomes retain a conservative reservation charge. Owner allocation is not available to visitors.
+One D1 transaction checks remaining pool capacity, checks the owner's active run/daily claim, inserts the run, reserves $2, and writes the visitor daily claim. Settlement atomically replaces the reservation with estimated usage once. Ambiguous provider outcomes retain a conservative reservation charge. Owner allocation is not available to visitors. `OWNER_INITIAL_SPEND_MICROS` carries already-incurred local testing costs into a new hosted owner ledger exactly once; changing it does not overwrite an existing ledger. Known rejected provider request creation releases the uncharged reservation while retaining prior stage usage.
 
 This ledger estimates API charges from usage and web-search calls. It is not a provider billing limit. Production should retain separate project-level billing controls. No secret is sent to the browser or committed to the source repository.
 

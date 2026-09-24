@@ -5,6 +5,7 @@ export type AppEnv = {
   OPENAI_API_KEY?: string;
   DENUE_API_TOKEN?: string;
   OWNER_USER_ID?: string;
+  OWNER_INITIAL_SPEND_MICROS?: string;
   PUBLIC_ORIGIN?: string;
   LIVE_RESEARCH_ENABLED?: string;
 };

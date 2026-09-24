@@ -13,6 +13,7 @@ import {
   safeUrl,
   exportCsv,
   matchesPurchasingScope,
+  matchesDirectTerritory,
 } from "../lib/validation";
 import { runInputSchema, researchOutput } from "../lib/server/schemas";
 
@@ -145,6 +146,28 @@ test("changed deadlines need a consulted official source", () => {
   assert.equal(result.deadlineSource, null);
   assert.equal(result.amendmentsChecked, false);
   assert.equal(result.status, "unknown");
+});
+test("citation tracking parameters do not discard a consulted document; identifying parameters stay distinct", () => {
+  const p = physician();
+  const url = p.evidence[0].url;
+  assert.equal(sanitizeOpportunities([p], [url + "?utm_source=openai#profile"], now).length, 1);
+  assert.equal(sanitizeOpportunities([p], [url + "?procedure=another-record"], now).length, 0);
+  const t = tender();
+  t.deadlineSource += "?utm_source=openai";
+  const result = sanitizeOpportunities([t], t.evidence.map(e => e.url), now)[0] as TenderOpportunity;
+  assert.equal(result.status, "open");
+  assert.ok(result.deadlineSource);
+});
+test("direct leads stay in the requested city and English analysis becomes an editable Spanish draft", () => {
+  const p = physician();
+  const input = exampleRun("procedures").input;
+  assert.equal(matchesDirectTerritory({ ...p, location: "CDMX, México" }, input), true);
+  assert.equal(matchesDirectTerritory({ ...p, location: "Huixquilucan, Estado de México" }, input), false);
+  p.outreach = "Physician profile is suitable for a commercial conversation. Ask for the correct contact.";
+  const clean = sanitizeOpportunities([p], p.evidence.map(e => e.url), now)[0] as PhysicianLead;
+  assert.match(clean.outreach, /^Hola/);
+  assert.match(clean.outreach, /\[tu nombre\]/);
+  assert.match(clean.outreach, /quién gestiona la compra/);
 });
 test("unsourced checklist requirements cannot be marked supported", () => {
   const x = tender();

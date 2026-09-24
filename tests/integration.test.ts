@@ -55,6 +55,7 @@ before(async () => {
     r2Buckets: ["BUCKET"],
     bindings: {
       OWNER_USER_ID: "owner-test",
+      OWNER_INITIAL_SPEND_MICROS: "125000",
       OPENAI_API_KEY: "test-placeholder-not-a-real-key",
       LIVE_RESEARCH_ENABLED: "true",
       PUBLIC_ORIGIN: "https://first-ten.test",
@@ -74,6 +75,8 @@ before(async () => {
         });
       if (req.method === "POST") {
         const body = (await req.json()) as { text?: unknown };
+        if (body.text) assert.doesNotMatch(JSON.stringify(body.text), /"format":"uri"/,
+          "OpenAI rejects URI format in strict structured outputs");
         const id = "response-" + requests;
         providerRecords.set(id, !!body.text);
         return Response.json({ id, status: "queued" });
@@ -187,6 +190,15 @@ async function cancel(id: string, user: string) {
   return call("runs/" + id + "/cancel", user, "POST");
 }
 
+test("prelaunch spending seeds the owner allowance once without consuming visitor funds", async () => {
+  for (let i = 0; i < 2; i++) {
+    assert.equal((await call("admin/status")).status, 200);
+    const owner = await db.prepare("SELECT spent_micros FROM budgets WHERE pool='owner'").first<{ spent_micros: number }>();
+    assert.equal(owner?.spent_micros, 125000);
+    const visitor = await db.prepare("SELECT spent_micros FROM budgets WHERE pool='visitors'").first<{ spent_micros: number }>();
+    assert.equal(visitor?.spent_micros, 0);
+  }
+});
 test("signed-out access and foreign-origin writes are rejected", async () => {
   assert.equal((await call("runs", "")).status, 401);
   assert.equal(

@@ -63,7 +63,7 @@ const contact = z.object({
 const direct = {
   sector: z.enum(["private", "public", "independent", "unknown"]),
   contacts: z.array(contact).max(6),
-  outreach: s,
+  outreach: s.describe("An actual ready-to-copy Spanish outreach message, starting Hola or Estimado/a. No English instructions or analysis. Use placeholders for the sender and company; never invent buying intent."),
 };
 export const opportunitySchema = z.discriminatedUnion("kind", [
   z.object({

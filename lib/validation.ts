@@ -15,6 +15,19 @@ export function isOfficialProcurementUrl(value: string) {
   const h = new URL(u).hostname;
   return h.endsWith(".gob.mx") || h === "gob.mx";
 }
+function sourceKey(value: unknown) {
+  const safe = safeUrl(value);
+  if (!safe) return null;
+  const url = new URL(safe);
+  for (const name of [...url.searchParams.keys()])
+    if (/^utm_/i.test(name)) url.searchParams.delete(name);
+  url.hash = "";
+  return url.href;
+}
+function sameSource(a: unknown, b: unknown) {
+  const key = sourceKey(a);
+  return !!key && key === sourceKey(b);
+}
 export function actionableTender(t: TenderOpportunity, now = Date.now()) {
   return (
     !t.historical &&
@@ -33,7 +46,7 @@ export function sanitizeOpportunities(
   sourceUrls: string[],
   now = Date.now(),
 ): Opportunity[] {
-  const allowed = new Set(sourceUrls.map(safeUrl).filter(Boolean));
+  const allowed = new Set(sourceUrls.map(sourceKey).filter(Boolean));
   const seen = new Set<string>();
   return items
     .map((item) => structuredClone(item))
@@ -50,7 +63,7 @@ export function sanitizeOpportunities(
       if (seen.has(key)) return false;
       item.evidence = item.evidence.filter(
         (e) =>
-          allowed.has(safeUrl(e.url)) &&
+          allowed.has(sourceKey(e.url)) &&
           !new URL(e.url).hostname.includes("doctoralia"),
       );
       if (!item.evidence.length) return false;
@@ -61,7 +74,7 @@ export function sanitizeOpportunities(
         if (!item.evidence.length) return false;
         if (
           item.deadlineSource &&
-          !item.evidence.some((e) => e.url === item.deadlineSource)
+          !item.evidence.some((e) => sameSource(e.url, item.deadlineSource))
         ) {
           item.deadlineSource = null;
           item.amendmentsChecked = false;
@@ -84,14 +97,14 @@ export function sanitizeOpportunities(
           ...c,
           status:
             c.status === "supported" &&
-            !item.evidence.some((e) => e.url === c.sourceUrl)
+            !item.evidence.some((e) => sameSource(e.url, c.sourceUrl))
               ? "needs review"
               : c.status,
         }));
       } else {
         item.contacts = item.contacts.map((c) => {
           const supported =
-            !!c.sourceUrl && item.evidence.some((e) => e.url === c.sourceUrl);
+            !!c.sourceUrl && item.evidence.some((e) => sameSource(e.url, c.sourceUrl));
           return {
             ...c,
             name: supported ? c.name : null,
@@ -100,6 +113,13 @@ export function sanitizeOpportunities(
           };
         });
         if (item.kind === "physician") item.credentials = "unverified";
+        if (!/\b(hola|estimad[oa]s?|buenos|buenas)\b/i.test(item.outreach) ||
+            !/\b(productos|cat[aá]logo|presentar|evaluaci[oó]n|proveedores)\b/i.test(item.outreach)) {
+          const question = item.kind === "physician"
+            ? "¿Sería posible coordinar una breve presentación y confirmar quién evalúa los productos y quién gestiona la compra o el alta de proveedores en su práctica o institución?"
+            : "¿Con quién podríamos revisar la evaluación técnica, los requisitos de compras y el alta de proveedores? Si corresponde, agradeceríamos el contacto del área de ingeniería biomédica.";
+          item.outreach = `Hola, ${item.name}:\n\nSoy [tu nombre], de [empresa]. Encontré su referencia profesional en ${item.evidence[0].url}. Me gustaría presentar nuestro catálogo de productos médicos y conocer sus criterios de evaluación, sin presuponer una necesidad de compra actual.\n\n${question}\n\nPodemos compartir las fichas técnicas y revisar los requisitos aplicables antes de proponer una demostración.\n\nGracias,\n[tu nombre y contacto profesional]`;
+        }
         if (item.sector === "public")
           item.gaps.push(
             "Clinical interest does not bypass public procurement or supplier approval. Confirm the institution’s formal purchasing route.",
@@ -109,6 +129,15 @@ export function sanitizeOpportunities(
       return true;
     })
     .slice(0, 10);
+}
+
+export function matchesDirectTerritory(item: Opportunity, input: RunInput) {
+  if (item.kind === "tender") return true;
+  const fold = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/\b(ciudad de mexico|mexico city|distrito federal|cdmx)\b/g, "cdmx");
+  const target = fold(input.readiness.territory).split(/[,;|]/)[0].trim();
+  if (["mexico", "national", "nacional", "todo mexico"].includes(target)) return true;
+  return !!target && fold(item.location).includes(target);
 }
 export function csvEscape(value: unknown) {
   const s = String(value ?? "");
