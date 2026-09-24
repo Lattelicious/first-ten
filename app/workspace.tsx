@@ -985,7 +985,7 @@ export default function Workspace({
               <SheetDescription>
                 {drawer === "saved"
                   ? "Only you can access these catalogs and research runs."
-                  : "Usage and official dataset imports."}
+                  : "Usage and dataset imports."}
               </SheetDescription>
             )}
           </SheetHeader>
@@ -1074,8 +1074,7 @@ export default function Workspace({
                   <h3>Import official discovery records</h3>
                   <p className="caveat">
                     Use a filtered CSV with its original headers. Maximum 2 MB /
-                    1,000 rows. Imports are dated context, not proof of an open
-                    tender.
+                    1,000 rows.
                   </p>
                   <label className="field-label" htmlFor="dataset-kind">
                     Dataset
