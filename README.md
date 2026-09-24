@@ -2,7 +2,7 @@
 
 A catalog-to-opportunity workspace for medical distributors in Mexico. First Ten recommends a sales route, then researches up to ten supported opportunities while separating **clinical interest**, **purchasing authority**, and **procurement eligibility**.
 
-**Status:** functional local prototype with reviewed examples and automated coverage. Live OpenAI smoke tests and hosted publication are pending credential provisioning. No live research cost or production result is claimed.
+**Status:** interactive showcase with reviewed examples, private catalog storage and automated coverage. The OpenAI connection is configured; live research is paused until the API account has credits. Both live research modes still require successful end-to-end evaluation before being presented as validated.
 
 ## The workflow
 

@@ -9,6 +9,7 @@ let mf: Miniflare;
 let db: D1Database;
 let requests = 0;
 let providerFailure = false;
+let providerCreditExhausted = false;
 const fixture = exampleRun("procedures").results[0];
 const input = exampleRun("procedures").input;
 const providerRecords = new Map<string, boolean>();
@@ -78,6 +79,8 @@ before(async () => {
         return Response.json({ id, status: "queued" });
       }
       const id = req.url.split("/").at(-1)!;
+      if (providerCreditExhausted)
+        return Response.json({ id, status: "failed", error: { code: "credit_balance_exhausted" }, usage: null });
       return Response.json({
         id,
         status: "completed",
@@ -302,6 +305,22 @@ test("unreadable and oversized uploads fail without private records", async () =
     results: unknown[];
   };
   assert.equal(records.results.length, 0);
+});
+test("exhausted API credit is explained and releases an uncharged reservation", async () => {
+  const before = await db.prepare("SELECT spent_micros FROM budgets WHERE pool='owner'").first();
+  providerCreditExhausted = true;
+  try {
+    const { data } = await start("owner-test");
+    assert.equal((await step(data.id)).status, "researching");
+    assert.equal((await step(data.id)).status, "failed");
+    const failed = await (await call("runs/" + data.id)).json() as { error: string; results: unknown[] };
+    assert.match(failed.error, /API account has no available credits/);
+    assert.equal(failed.results.length, 0);
+    assert.deepEqual(await db.prepare("SELECT spent_micros FROM budgets WHERE pool='owner'").first(), before);
+    const budget = await db.prepare("SELECT reserved_micros FROM budgets WHERE pool='owner'").first<{ reserved_micros: number }>();
+    assert.equal(budget?.reserved_micros, 0);
+    assert.equal((await call("runs/" + data.id, "owner-test", "DELETE")).status, 200);
+  } finally { providerCreditExhausted = false; }
 });
 test("provider failure stays visible, does not invent results, and settles once", async () => {
   providerFailure = true;

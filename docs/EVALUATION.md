@@ -18,7 +18,7 @@ Covered:
 - Private CSV/R2 uploads, corrupted/oversized files, text PDFs at 1/20 pages, rejection at 21 pages, and unreadable/image-only text.
 - Official-cache domain validation and separate dataset dates.
 
-Result: **30 tests passed**, TypeScript checks passed, and the production build completed.
+Result: **31 tests passed**, TypeScript checks passed, and the production build completed.
 
 Commands: `npm test`, `npm run typecheck`, `npm run build`.
 
@@ -28,14 +28,16 @@ Checked signed-out examples, mixed-family review, primary-route overrides, physi
 
 ## Measured costs and live gate
 
-**Live research spend measured by this implementation: $0.** No successful API key provision or live research request has occurred. Attempts to create the key were rejected by OpenAI Platform without a detailed error. No secret was created or written by this workflow. Live smoke tests in both modes remain pending; model quality, live latency and per-run live cost have not been measured.
+**Reported token usage and measured research cost: $0.** A user-created project key was configured privately on 24 September 2026. OpenAI accepted authentication and confirmed access to the configured model. The first live procurement run returned `credit_balance_exhausted` with no usage. It stopped without recommendations after approximately 6.5 seconds. Further paid requests were paused. This is a live failure-path check, not a successful research evaluation; quality, successful latency and per-run cost remain unmeasured.
+
+A regression test now verifies that confirmed quota rejection explains the billing issue, invents no results, and releases an uncharged reservation. Unknown provider outcomes retain conservative accounting.
 
 Budget configuration: $20 visitors + $5 owner testing/demonstrations. Each run reserves $2 atomically. Usage estimates use the configured model's input/output rates and actual web-search call count; ambiguous outcomes retain a conservative charge. These estimates must be reconciled against provider billing after the first live runs. The hosted app must not claim these fixture tests as live results.
 
 ## Required before the hosted showcase is complete
 
-1. Provision the approved key and store it as a hosted secret.
-2. Configure the actual owner identifier and runtime settings; configure DENUE or visibly retain its coverage limitation.
+1. Fund the API account. The project key has already been saved privately and configured as a hosted secret.
+2. Verify the hosted owner identity and enable research after funding. DENUE remains unconfigured, with a visible coverage limitation.
 3. Run one live procurement and one live direct-contact smoke test within the $5 owner allocation, recording costs and latency.
 4. Manually review returned claims and publish only supported results.
 5. Publish through Sites and verify the production ChatGPT sign-in boundary. Link the successful hosted deployment from the GitHub showcase.
