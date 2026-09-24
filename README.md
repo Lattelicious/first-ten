@@ -1,10 +1,26 @@
 # First Ten
 
-A catalog-to-opportunity workspace for medical distributors in Mexico. First Ten recommends a sales route, then researches up to ten supported opportunities while separating **clinical interest**, **purchasing authority**, and **procurement eligibility**.
+**Work in progress · Medical distribution in Mexico**
 
-**Status:** public workspace with live research, reviewed examples and private catalog storage. Both research modes completed live smoke tests; the physician test returned six manually audited CDMX candidates, and the procurement test returned an honest empty result with coverage limitations. See the evaluation record for costs and limits.
+I recently worked with a medical distribution company. The specific demands of the industry inspired me to begin developing this application.
 
-[Open First Ten](https://first-ten.casagarciachavez.chatgpt.site) · [Evaluation record](docs/EVALUATION.md)
+First Ten turns a medical product catalog into a suggested sales approach and a shortlist of relevant opportunities. The working prototype includes catalog intake, route recommendations, source-backed research, and editable Spanish outreach drafts. The product, source coverage, and qualification logic are still being refined.
+
+[Explore the prototype](https://first-ten.casagarciachavez.chatgpt.site) · [Architecture](docs/ARCHITECTURE.md) · [Evaluation record](docs/EVALUATION.md)
+
+## Why the sales approach matters
+
+Medical distributors need to decide where to begin for each device and which relationships support the eventual sale:
+
+- **Licitaciones:** a formal route to public-sector purchasing, where the institution's specifications, timelines, and supplier requirements shape the opportunity.
+- **Direct physician relationships:** a way to understand clinical needs and discuss procedure-specific devices, instruments, and consumables with the people who use them.
+- **Direct hospital sales:** conversations with purchasing, biomedical engineering, and other relevant teams about equipment, compatibility, installation, service, and supplier registration.
+
+These channels can work in tandem. A physician may influence product selection while the hospital manages purchasing; public institutions may require a formal procurement process. Choosing the primary approach depends on the nature of the device, its intended setting, the buyer, and the support it requires.
+
+For hospital-scale monitoring, First Ten initially recommends institutional procurement and hospital contacts. For procedure-focused products, it usually starts with physician relationships and the associated facility's purchasing route. Equipment for an independent practice may fit direct clinic sales. Mixed catalogs are considered by product family. These are starting recommendations that users can review and override.
+
+A [historical IMSS tender for central and intensive-care monitoring](https://sidof.segob.gob.mx/notas/docFuente/5740209) illustrates how a device category can connect to institutional procurement.
 
 ## The workflow
 
@@ -13,8 +29,6 @@ A catalog-to-opportunity workspace for medical distributors in Mexico. First Ten
 3. Override the primary/complementary recommendation for each family.
 4. Select **Licitaciones** or **Contacto directo → Médicos / Hospitales y clínicas**.
 5. Inspect the source-backed brief, unresolved questions and next step. Copy an editable Spanish draft or export CSV.
-
-Hospital-scale patient monitoring usually starts with procurement plus institutional purchasing/biomedical engineering. Procedure-specific supplies usually start with clinicians plus the facility's buying process. Mixed catalogs keep separate family recommendations. Office equipment does not automatically become a public-tender opportunity. These are initial commercial heuristics, not universal rules.
 
 ## What distinguishes the results
 
